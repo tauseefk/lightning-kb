@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const Task = ({task, moveLeft, moveRight}) => (
     <div className='task row'>

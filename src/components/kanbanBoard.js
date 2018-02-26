@@ -138,7 +138,7 @@ export default class Kanban extends Component {
       .map((stage) => {
         var tasks = stage.tasks;
         if(stage.id === stageId) {
-          tasks = stage.tasks.filter((task) => task.id != taskId);
+          tasks = stage.tasks.filter((task) => task.id !== taskId);
         }
         return {
           id: stage.id,
