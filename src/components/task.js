@@ -1,4 +1,5 @@
 import React from 'react';
+import shouldUpdate from 'recompose/shouldUpdate';
 
 const Task = ({ task, moveLeft, moveRight }) => (
   <div className='task row'>
@@ -15,5 +16,6 @@ const Task = ({ task, moveLeft, moveRight }) => (
       </p>
   </div>
 )
+const checkPropsChange = (props, nextProps) => nextProps.task !== props.task;
 
-export default Task;
+export default shouldUpdate(checkPropsChange)(Task);

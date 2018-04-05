@@ -1,28 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Task from './task';
+import shouldUpdate from 'recompose/shouldUpdate';
 
-export default class Stage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: this.props.name
-    }
-    this.handleClick = this.props.addTask;
-  }
-
-  render() {
-    return (
-      <div className='col-sm-3'>
-        <p style={this.props.style} className='stage'>{this.props.name}</p>
-        <Tasks
-          taskList={this.props.taskList}
-          moveLeft={this.props.moveLeft}
-          moveRight={this.props.moveRight}
-        />
-        <p className='btn' onClick={this.handleClick}>+ Add a card</p>
-      </div>
-    )
-  }
+const Stage = ({ style, name, taskList, moveLeft, moveRight, addTask }) => {
+  return (
+    <div className='col-sm-3'>
+      <p style={style} className='stage'>{name}</p>
+      <Tasks
+        taskList={taskList}
+        moveLeft={moveLeft}
+        moveRight={moveRight}
+      />
+      <p className='btn' onClick={addTask}>+ Add a card</p>
+    </div>
+  )
 }
 
 const Tasks = ({ taskList, moveLeft, moveRight }) => {
@@ -34,3 +25,9 @@ const Tasks = ({ taskList, moveLeft, moveRight }) => {
       moveRight={() => moveRight(task.id)} />
   ))
 }
+// XXX:TODO task moving and adding doesn't work
+const checkPropsChange = (props, nextProps) => {
+  return nextProps.taskList.length !== props.taskList.length
+};
+
+export default Stage;

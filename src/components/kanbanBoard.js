@@ -78,7 +78,7 @@ export default class Kanban extends Component {
               content: "eat"
             },
             {
-              id: uuid(),
+              id: "54",
               content: "sleep"
             }
           ]
@@ -92,67 +92,15 @@ export default class Kanban extends Component {
     if (!taskContent || taskContent.trim() === '') {
       return;
     }
-    var updatedStagesList = this.state.stagesList.map((stage) => {
-      var tasks = stage.tasks;
-      if (stage.id === stageId) {
-        tasks.push({
-          id: uuid(),
-          content: taskContent
-        });
-      }
-      return {
-        id: stage.id,
-        name: stage.name,
-        tasks: tasks,
-        style: stage.style,
-        left: stage.left,
-        right: stage.right
-      };
-    });
-    this.setState({
-      stagesList: updatedStagesList
-    })
-  }
-
-  moveTask = (currStageId, destStageId, taskId) => {
-    if (destStageId === null) {
-      return;
+    let task = {
+      id: uuid(),
+      content: taskContent
     }
-    var task = this.state.stagesList
-      .filter((stage) => stage.id === currStageId)
-      .map((stage) => stage.tasks)
-      .concatAll()
-      .filter((task) => task.id === taskId)
-      .head();
-
-    this.setState(function (prevState) {
-      return { stagesList: this.addTask(prevState, destStageId, task) };
-    });
-    this.setState(function (prevState) {
-      return { stagesList: this.removeTask(prevState, currStageId, taskId) };
-    });
+    this.setState(prevState => ({ stagesList: this.addTask(prevState, stageId, task) }));
   }
 
-  removeTask = (state, stageId, taskId) => {
-    return state.stagesList
-      .map((stage) => {
-        var tasks = stage.tasks;
-        if (stage.id === stageId) {
-          tasks = stage.tasks.filter((task) => task.id !== taskId);
-        }
-        return {
-          id: stage.id,
-          name: stage.name,
-          tasks: tasks,
-          style: stage.style,
-          left: stage.left,
-          right: stage.right
-        }
-      });
-  }
-
-  addTask = (state, stageId, task) => {
-    return state.stagesList.map((stage) => {
+  addTask = ({ stagesList }, stageId, task) => {
+    return stagesList.map((stage) => {
       var tasks = stage.tasks;
       if (stage.id === stageId) {
         tasks.push({
@@ -168,6 +116,38 @@ export default class Kanban extends Component {
         left: stage.left,
         right: stage.right
       };
+    });
+  }
+
+  moveTask = (currStageId, destStageId, taskId) => {
+    if (destStageId === null) {
+      return;
+    }
+    var task = this.state.stagesList
+      .filter((stage) => stage.id === currStageId)
+      .map((stage) => stage.tasks)
+      .concatAll()
+      .filter((task) => task.id === taskId)
+      .head();
+
+    this.setState(prevState => ({ stagesList: this.addTask(prevState, destStageId, task) }));
+    this.setState(prevState => ({ stagesList: this.removeTask(prevState, currStageId, taskId) }));
+  }
+
+  removeTask = ({ stagesList }, stageId, taskId) => {
+    return stagesList.map((stage) => {
+      var tasks = stage.tasks;
+      if (stage.id === stageId) {
+        tasks = stage.tasks.filter((task) => task.id !== taskId);
+      }
+      return {
+        id: stage.id,
+        name: stage.name,
+        tasks: tasks,
+        style: stage.style,
+        left: stage.left,
+        right: stage.right
+      }
     });
   }
 
