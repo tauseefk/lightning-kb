@@ -3,7 +3,7 @@ import Stage from './stage';
 import uuid from 'uuid/v4';
 
 export default class Kanban extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       stagesList: [
@@ -87,14 +87,14 @@ export default class Kanban extends Component {
     }
   }
 
-  handleAddTask(stageId) {
+  handleAddTask = (stageId) => {
     var taskContent = window.prompt('enter your task..');
-    if(!taskContent || taskContent.trim() === '') {
+    if (!taskContent || taskContent.trim() === '') {
       return;
     }
     var updatedStagesList = this.state.stagesList.map((stage) => {
       var tasks = stage.tasks;
-      if(stage.id === stageId) {
+      if (stage.id === stageId) {
         tasks.push({
           id: uuid(),
           content: taskContent
@@ -103,7 +103,7 @@ export default class Kanban extends Component {
       return {
         id: stage.id,
         name: stage.name,
-        tasks:tasks,
+        tasks: tasks,
         style: stage.style,
         left: stage.left,
         right: stage.right
@@ -114,8 +114,8 @@ export default class Kanban extends Component {
     })
   }
 
-  moveTask(currStageId, destStageId, taskId) {
-    if(destStageId === null) {
+  moveTask = (currStageId, destStageId, taskId) => {
+    if (destStageId === null) {
       return;
     }
     var task = this.state.stagesList
@@ -125,25 +125,25 @@ export default class Kanban extends Component {
       .filter((task) => task.id === taskId)
       .head();
 
-    this.setState(function(prevState) {
-      return {stagesList: this.addTask(prevState, destStageId, task)};
+    this.setState(function (prevState) {
+      return { stagesList: this.addTask(prevState, destStageId, task) };
     });
-    this.setState(function(prevState) {
-      return {stagesList: this.removeTask(prevState, currStageId, taskId)};
+    this.setState(function (prevState) {
+      return { stagesList: this.removeTask(prevState, currStageId, taskId) };
     });
   }
 
-  removeTask(state, stageId, taskId) {
+  removeTask = (state, stageId, taskId) => {
     return state.stagesList
       .map((stage) => {
         var tasks = stage.tasks;
-        if(stage.id === stageId) {
+        if (stage.id === stageId) {
           tasks = stage.tasks.filter((task) => task.id !== taskId);
         }
         return {
           id: stage.id,
           name: stage.name,
-          tasks:tasks,
+          tasks: tasks,
           style: stage.style,
           left: stage.left,
           right: stage.right
@@ -151,10 +151,10 @@ export default class Kanban extends Component {
       });
   }
 
-  addTask(state, stageId, task) {
+  addTask = (state, stageId, task) => {
     return state.stagesList.map((stage) => {
       var tasks = stage.tasks;
-      if(stage.id === stageId) {
+      if (stage.id === stageId) {
         tasks.push({
           id: task.id || uuid(),
           content: task.content
@@ -163,7 +163,7 @@ export default class Kanban extends Component {
       return {
         id: stage.id,
         name: stage.name,
-        tasks:tasks,
+        tasks: tasks,
         style: stage.style,
         left: stage.left,
         right: stage.right
@@ -173,27 +173,27 @@ export default class Kanban extends Component {
 
   render() {
     return (
-        <div className='row'>
-          <Stages
-            stagesList={this.state.stagesList}
-            addTask={this.handleAddTask.bind(this)}
-            moveTask={this.moveTask.bind(this)}
-          />
+      <div className='row'>
+        <Stages
+          stagesList={this.state.stagesList}
+          addTask={this.handleAddTask}
+          moveTask={this.moveTask}
+        />
       </div>
     );
   }
 }
 
 const Stages = ({ stagesList, addTask, moveTask }) => {
-  return stagesList.map((stage) => (
+  return stagesList.map(({ id, style, name, tasks, left, right }) => (
     <Stage
-      key={stage.id}
-      style={stage.style}
-      name={stage.name}
-      taskList={stage.tasks}
-      addTask={addTask.bind(this, stage.id)}
-      moveLeft={moveTask.bind(this, stage.id, stage.left)}
-      moveRight={moveTask.bind(this, stage.id, stage.right)}
+      key={id}
+      style={style}
+      name={name}
+      taskList={tasks}
+      addTask={() => addTask(id)}
+      moveLeft={(taskId) => moveTask(id, left, taskId)}
+      moveRight={(taskId) => moveTask(id, right, taskId)}
     />
   ))
 }
