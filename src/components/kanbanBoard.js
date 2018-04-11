@@ -78,7 +78,7 @@ export default class Kanban extends Component {
               content: "eat"
             },
             {
-              id: "54",
+              id: 54,
               content: "sleep"
             }
           ]
@@ -101,7 +101,7 @@ export default class Kanban extends Component {
 
   addTask = ({ stagesList }, stageId, task) => {
     return stagesList.map((stage) => {
-      var tasks = stage.tasks;
+      var tasks = [...stage.tasks];
       if (stage.id === stageId) {
         tasks.push({
           id: task.id || uuid(),

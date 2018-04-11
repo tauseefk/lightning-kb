@@ -25,9 +25,9 @@ const Tasks = ({ taskList, moveLeft, moveRight }) => {
       moveRight={() => moveRight(task.id)} />
   ))
 }
-// XXX:TODO task moving and adding doesn't work
+// XXX:TODO task moving and adding doesn't work with this condition
 const checkPropsChange = (props, nextProps) => {
   return nextProps.taskList.length !== props.taskList.length
 };
 
-export default Stage;
+export default shouldUpdate(checkPropsChange)(Stage);
